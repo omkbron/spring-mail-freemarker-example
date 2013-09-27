@@ -9,11 +9,12 @@ public class Pedido {
 	private String pedidoCliente;
 	private Date fechaPedido;
 	private Date fechaEntrega;
-	private Date fechaHoraAlta;
+	private Date fechaHoraAccion;
 	private String almacen;
 	private Cliente cliente;
 	private String user;
 	private List<Producto> productos;
+	private String causa;
 
 	public Pedido(int numPedido) {
 		this.numero = numPedido;
@@ -59,12 +60,12 @@ public class Pedido {
 		this.fechaEntrega = fechaEntrega;
 	}
 
-	public Date getFechaHoraAlta() {
-		return fechaHoraAlta;
+	public Date getFechaHoraAccion() {
+		return fechaHoraAccion;
 	}
 
-	public void setFechaHoraAlta(Date fechaHoraAlta) {
-		this.fechaHoraAlta = fechaHoraAlta;
+	public void setFechaHoraAccion(Date fechaHoraAccion) {
+		this.fechaHoraAccion = fechaHoraAccion;
 	}
 
 	public String getAlmacen() {
@@ -97,6 +98,14 @@ public class Pedido {
 
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
+	}
+	
+	public String getCausa() {
+		return causa;
+	}
+
+	public void setCausa(String causa) {
+		this.causa = causa;
 	}
 
 	@Override

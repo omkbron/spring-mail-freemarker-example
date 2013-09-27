@@ -6,6 +6,9 @@ public class PedidoSql {
 	public static final String GET_CLIENTE;
 	public static final String GET_PEDIDOPROD;
 	public static final String GET_PEDIDCORTE;
+	public static final String GET_RECIPIENTS;
+	public static final String GET_CAUSA;
+	public static final String GET_HORABAJA;
 	
 	static {
 		StringBuilder sb = new StringBuilder();
@@ -53,6 +56,36 @@ public class PedidoSql {
         	.append("ORDER BY pedidcorte.corte, pedidcorte.item_ped").append(EOL);
 		GET_PEDIDCORTE = sb.toString();
 		
+		clearAndReuseStringBuilder(sb);
+		
+		sb = new StringBuilder();
+		sb.append("SELECT diuser_deta.email").append(EOL)
+        	.append("FROM diusermailmov, diuser_deta, dialmamail").append(EOL)
+        	.append("WHERE diusermailmov.usuario = diuser_deta.usuario").append(EOL)
+        	.append("AND diusermailmov.usuario = dialmamail.usuario").append(EOL)
+        	.append("AND diusermailmov.clave_mov = dialmamail.tipo_mov").append(EOL)
+        	.append("AND dialmamail.alma_clave = ?").append(EOL)
+        	.append("AND diusermailmov.clave_mov = '800'").append(EOL);
+		GET_RECIPIENTS = sb.toString();
+		
+		clearAndReuseStringBuilder(sb);
+		
+		sb = new StringBuilder();
+		sb.append("SELECT TRIM(causa_baja_doc.descripcion) AS descripcion").append(EOL) 
+			.append("FROM causa_baja_doc, causa_baja_doc_pedid").append(EOL)
+			.append("WHERE causa_baja_doc.clave = causa_baja_doc_pedid.clave").append(EOL)
+			.append("AND causa_baja_doc_pedid.pedido_num = ?");
+		GET_CAUSA = sb.toString();
+
+		clearAndReuseStringBuilder(sb);
+		
+		sb = new StringBuilder();
+
+		sb.append("SELECT fecha_hora FROM traza_pedido").append(EOL)
+			.append("WHERE pedido_num = ?").append(EOL)
+			.append("AND status_pedido = 'C'").append(EOL);
+
+		GET_HORABAJA = sb.toString();
 	}
 	private static StringBuilder clearAndReuseStringBuilder(final StringBuilder qry) {
 		qry.delete(0, qry.length());
@@ -60,6 +93,6 @@ public class PedidoSql {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(GET_PEDIDO);
+		System.out.println(GET_PEDIDOPROD);
 	}
 }

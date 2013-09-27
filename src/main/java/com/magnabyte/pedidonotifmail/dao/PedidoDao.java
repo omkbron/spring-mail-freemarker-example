@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.magnabyte.pedidonotifmail.bean.Cliente;
@@ -38,7 +39,7 @@ public class PedidoDao {
 				cliente.setClave(rs.getString("clie_clave"));
 				pedido.setCliente(cliente);
 				pedido.setUser(rs.getString("usuario"));
-				pedido.setFechaHoraAlta(rs.getDate("fecha_hora"));
+				pedido.setFechaHoraAccion(rs.getDate("fecha_hora"));
 			}
 
 			return pedido;
@@ -159,6 +160,106 @@ public class PedidoDao {
 			}
 
 			return cortes;
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			throw sqle;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (con != null && !con.isClosed())
+				con.close();
+		}
+	}
+
+	public String[] obtenerDestinatarios(Pedido pedido) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int i = 1;
+		try {
+			con = JDBCDAOFactory.createConnection();
+			ps = con.prepareStatement(PedidoSql.GET_RECIPIENTS);
+			ps.clearParameters();
+			ps.setString(i++, pedido.getAlmacen());
+			rs = ps.executeQuery();
+			List<String> recipients = new ArrayList<String>();
+			while (rs.next()) {
+				String recipient = rs.getString("email");
+				recipients.add(recipient);
+			}
+
+			return recipients.toArray(new String[0]);
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			throw sqle;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (con != null && !con.isClosed())
+				con.close();
+		}
+	}
+
+	public String recuperarCausa(Pedido pedido) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int i = 1;
+		try {
+			con = JDBCDAOFactory.createConnection();
+			ps = con.prepareStatement(PedidoSql.GET_CAUSA);
+			ps.clearParameters();
+			ps.setInt(i++, pedido.getNumero());
+			rs = ps.executeQuery();
+			String causa = null;
+			if (rs.next()) {
+				causa = rs.getString("descripcion");
+			}
+
+			return causa;
+
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			throw sqle;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (con != null && !con.isClosed())
+				con.close();
+		}
+	}
+
+	public Date recuperarHoraBaja(Pedido pedido) throws Exception {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		int i = 1;
+		try {
+			con = JDBCDAOFactory.createConnection();
+			ps = con.prepareStatement(PedidoSql.GET_HORABAJA);
+			ps.clearParameters();
+			ps.setInt(i++, pedido.getNumero());
+			rs = ps.executeQuery();
+			Date fecha = null;
+			if (rs.next()) {
+				fecha = rs.getDate("fecha_hora");
+			}
+
+			return fecha;
 
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();

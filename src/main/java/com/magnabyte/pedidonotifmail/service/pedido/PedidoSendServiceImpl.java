@@ -1,14 +1,13 @@
 package com.magnabyte.pedidonotifmail.service.pedido;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.magnabyte.pedidonotifmail.bean.Cliente;
 import com.magnabyte.pedidonotifmail.bean.Pedido;
 import com.magnabyte.pedidonotifmail.bean.Producto;
+import com.magnabyte.pedidonotifmail.bean.TipoAccion;
 import com.magnabyte.pedidonotifmail.dao.PedidoDao;
 import com.magnabyte.pedidonotifmail.service.GenericSendService;
 import com.omkbron.sendemail.model.BeanMail;
@@ -19,8 +18,10 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 	private BeanMail beanMail;
 	private Pedido pedido;
 	private PedidoDao pedidoDao;
+	private TipoAccion accion;
 
-	public PedidoSendServiceImpl(int numPedido, String nameFileProperties) throws FileNotFoundException {
+	public PedidoSendServiceImpl(TipoAccion accion, int numPedido, String nameFileProperties) throws FileNotFoundException {
+		this.accion = accion;
 		pedidoDao = new PedidoDao();
 		pedido = new Pedido(numPedido);
 		loadFileProperties(nameFileProperties);
@@ -35,22 +36,26 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 			cliente = pedidoDao.recuperarClientePedido(pedido);
 			pedido.setCliente(cliente);
 			
-			pedido.setProductos(pedidoDao.recuperarProductos(pedido));
-			
-			for (Producto producto : pedido.getProductos()) {
-				producto.setCortes(pedidoDao.recuperarCortesProducto(producto));
+			switch (accion) {
+			case ALTA:
+				pedido.setProductos(pedidoDao.recuperarProductos(pedido));
+				
+				for (Producto producto : pedido.getProductos()) {
+					producto.setCortes(pedidoDao.recuperarCortesProducto(producto));
+				}
+				break;
+			case BAJA:
+				pedido.setCausa(pedidoDao.recuperarCausa(pedido));
+				if (pedido.getCausa() == null || pedido.getCausa().equals("")) {
+					pedido.setCausa("NO DEFINIDO");
+				}
+				pedido.setFechaHoraAccion(pedidoDao.recuperarHoraBaja(pedido));
+			default:
+				break;
 			}
-			
-			List<Producto> prodtemp = new ArrayList<Producto>();
-			prodtemp.add(pedido.getProductos().get(0));
-			prodtemp.add(pedido.getProductos().get(0));
-			prodtemp.add(pedido.getProductos().get(0));
-			
-			pedido.setProductos(prodtemp);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(pedido);
 		constructBeanMail();
 	}
 
@@ -61,14 +66,29 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 		beanMail.setUserName(sendProperties.getProperty("fromMail"));
 		beanMail.setPassword(sendProperties.getProperty("pwdMail"));
 		beanMail.setFrom(sendProperties.getProperty("from"));
-		beanMail.setSubject("GBP Sucursal-Clave, Nombre del cliente Pedido Alta: Folio");
+		beanMail.setSubject("GBP Almacén: " + pedido.getAlmacen() + " - " 
+				+ pedido.getCliente().getClave() 
+				+ " " + pedido.getCliente().getNombre() 
+				+" " + accion.getDescripcion() + ": " + pedido.getNumero());
 		beanMail.setDirectoryHtmlTemplate(sendProperties.getProperty("pathWork"));
-		beanMail.setHtmlTemplate(sendProperties.getProperty("fileHTML"));
+		String template = null;
+		switch (accion) {
+		case ALTA:
+			template = sendProperties.getProperty("fileHTML");
+			break;
+		case BAJA:
+			template = sendProperties.getProperty("fileHTMLCancel");
+			break;
+		default:
+			break;
+		}
+		beanMail.setHtmlTemplate(template);
 		beanMail.setHtmlBodyProps(getHtmlBodyProps());
-//		beanMail.setRecipients(dataDocto.getEmails().toArray(new String[0]));
-//		beanMail.setRecipients("ovelasco@magnabyte.com.mx", "omvp29@hotmail.com", "omvp29@gmail.com", "pponce@magnabyte.com.mx", "iortega@magnabyte.com.mx");
-		beanMail.setRecipients("omvp29@hotmail.com");
-
+		try {
+			beanMail.setRecipients(pedidoDao.obtenerDestinatarios(pedido));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Map<String, Object> getHtmlBodyProps() {
@@ -81,9 +101,13 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 	@Override
 	public void sendMail() {
 		try {
-			SendMail sendMail = new SendMail();
-			sendMail.setupMail(beanMail);
-			sendMail.send();
+			if (beanMail.getRecipients().length > 0) {
+				SendMail sendMail = new SendMail();
+				sendMail.setupMail(beanMail);
+				sendMail.send();
+			} else {
+				System.out.println("El correo no se envia ya que no hay destinatarios configurados.");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(2);

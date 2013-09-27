@@ -32,8 +32,8 @@
               <p>Clave Cliente: <strong>${pedido.cliente.clave}</strong></p>
               <p>Nombre del Cliente:  <strong>${pedido.cliente.nombre}</strong></p>
               <p>Usuario que da de alta el pedido: <strong>${pedido.user}</strong></p>
-              <p>Fecha y hora de alta: <strong>${pedido.fechaHoraAlta?string("dd/MM/yyyy HH:mm:ss")}</strong></p>
-              <table cellpadding="2" cellspacing="0">
+              <p>Fecha y hora de alta: <strong>${pedido.fechaHoraAccion?string("dd/MM/yyyy HH:mm:ss")}</strong></p>
+              <table cellpadding="2" cellspacing="0" style="font-size: 13px; color: #959595; font-weight: normal; text-align: left; font-family: Helvetica, Arial, sans-serif; line-height: 24px;">
                 <thead>
                   <tr>
                     <th style="text-align: center; border-bottom: 1px solid">Cantidad</th>
@@ -52,8 +52,8 @@
                       <td style="text-align: center;">${prod.presentacion}</td>
                       <td style="text-align: center;">${prod.clave}</td>
                       <td style="text-align: center;">${prod.descripcion}</td>
-                      <td style="text-align: center;">${prod.ancho}</td>
-                      <td style="text-align: center;">${prod.largo}</td>
+                      <td style="text-align: center;">${prod.ancho?string("0.0000")}</td>
+                      <td style="text-align: center;">${prod.largo?string("0.00")}</td>
                       <td style="text-align: center;">${prod.unidad}</td>
                     </tr>
                     <#list prod.cortes as corte>
@@ -62,8 +62,8 @@
                         <td style="text-align: center;"></td>
                         <td style="text-align: center;"></td>
                         <td style="text-align: center;">Bobinas: ${corte.numBobinas}</td>
-                        <td style="text-align: center;">${corte.ancho}</td>
-                        <td style="text-align: center;">${corte.largo}</td>
+                        <td style="text-align: center;">${corte.ancho?string("0.0000")}</td>
+                        <td style="text-align: center;">${corte.largo?string("0.00")}</td>
                         <td style="text-align: center;"></td>
                       </tr>
                     </#list>
