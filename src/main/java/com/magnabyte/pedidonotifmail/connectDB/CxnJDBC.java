@@ -39,7 +39,7 @@ public class CxnJDBC implements JDBCConnectionParameter {
 			System.out.println(e.getMessage());
 		}
 		try {
-			System.out.println(URLDB + SERVERHOST + PORTDB + SID + INFORMIXSERVER + " " + USERDB + " " + PWDDB);
+//			System.out.println(URLDB + SERVERHOST + PORTDB + SID + INFORMIXSERVER + " " + USERDB + " " + PWDDB);
 			con = DriverManager.getConnection(URLDB + SERVERHOST + PORTDB + SID + INFORMIXSERVER, USERDB, PWDDB);
 			con.setAutoCommit(autoCommit);
 		} catch (SQLException e) {
