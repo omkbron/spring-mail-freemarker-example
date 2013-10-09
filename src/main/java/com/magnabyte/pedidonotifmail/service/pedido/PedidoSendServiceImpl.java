@@ -11,7 +11,8 @@ import com.magnabyte.pedidonotifmail.bean.TipoAccion;
 import com.magnabyte.pedidonotifmail.dao.PedidoDao;
 import com.magnabyte.pedidonotifmail.service.GenericSendService;
 import com.omkbron.sendemail.model.BeanMail;
-import com.omkbron.sendemail.service.SendMail;
+import com.omkbron.sendemail.model.BeanMailConstructor;
+import com.omkbron.sendemail.service.SendMailTemplate;
 
 public class PedidoSendServiceImpl extends GenericSendService implements
 		PedidoSendService {
@@ -19,6 +20,7 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 	private Pedido pedido;
 	private PedidoDao pedidoDao;
 	private TipoAccion accion;
+	SendMailTemplate sendMail;
 
 	public PedidoSendServiceImpl(TipoAccion accion, int numPedido, String nameFileProperties) throws FileNotFoundException {
 		this.accion = accion;
@@ -56,39 +58,43 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		constructBeanMail();
-	}
-
-	@Override
-	public void constructBeanMail() {
-		beanMail = new BeanMail();
-		beanMail.setMailProps(sendProperties);
-		beanMail.setUserName(sendProperties.getProperty("fromMail"));
-		beanMail.setPassword(sendProperties.getProperty("pwdMail"));
-		beanMail.setFrom(sendProperties.getProperty("from"));
-		beanMail.setSubject("GBP Almacén: " + pedido.getAlmacen() + " - " 
-				+ pedido.getCliente().getClave() 
-				+ " " + pedido.getCliente().getNombre() 
-				+" " + accion.getDescripcion() + ": " + pedido.getNumero());
-		beanMail.setDirectoryHtmlTemplate(sendProperties.getProperty("pathWork"));
-		String template = null;
-		switch (accion) {
-		case ALTA:
-			template = sendProperties.getProperty("fileHTML");
-			break;
-		case BAJA:
-			template = sendProperties.getProperty("fileHTMLCancel");
-			break;
-		default:
-			break;
-		}
-		beanMail.setHtmlTemplate(template);
-		beanMail.setHtmlBodyProps(getHtmlBodyProps());
-		try {
-			beanMail.setRecipients(pedidoDao.obtenerDestinatarios(pedido));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sendMail = new SendMailTemplate();
+		
+		sendMail.setupMail(new BeanMailConstructor() {
+			
+			@Override
+			public BeanMail constructBeanMail() {
+				beanMail = new BeanMail();
+				beanMail.setMailProps(sendProperties);
+				beanMail.setUserName(sendProperties.getProperty("fromMail"));
+				beanMail.setPassword(sendProperties.getProperty("pwdMail"));
+				beanMail.setFrom(sendProperties.getProperty("from"));
+				beanMail.setSubject("GBP Almacén: " + pedido.getAlmacen() + " - " 
+						+ pedido.getCliente().getClave() 
+						+ " " + pedido.getCliente().getNombre() 
+						+" " + accion.getDescripcion() + ": " + pedido.getNumero());
+				beanMail.setDirectoryHtmlTemplate(sendProperties.getProperty("pathWork"));
+				String template = null;
+				switch (accion) {
+				case ALTA:
+					template = sendProperties.getProperty("fileHTML");
+					break;
+				case BAJA:
+					template = sendProperties.getProperty("fileHTMLCancel");
+					break;
+				default:
+					break;
+				}
+				beanMail.setHtmlTemplate(template);
+				beanMail.setHtmlBodyProps(getHtmlBodyProps());
+				try {
+					beanMail.setRecipients(pedidoDao.obtenerDestinatarios(pedido));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return beanMail;
+			}
+		});
 	}
 
 	private Map<String, Object> getHtmlBodyProps() {
@@ -102,8 +108,6 @@ public class PedidoSendServiceImpl extends GenericSendService implements
 	public void sendMail() {
 		try {
 			if (beanMail.getRecipients().length > 0) {
-				SendMail sendMail = new SendMail();
-				sendMail.setupMail(beanMail);
 				sendMail.send();
 			} else {
 				System.out.println("El correo no se envia ya que no hay destinatarios configurados.");

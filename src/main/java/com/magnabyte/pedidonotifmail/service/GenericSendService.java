@@ -29,5 +29,4 @@ public abstract class GenericSendService {
 		}
 	}
 	
-	public abstract void constructBeanMail();
 }
