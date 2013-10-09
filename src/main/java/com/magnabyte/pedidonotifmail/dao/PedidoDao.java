@@ -14,6 +14,7 @@ import com.magnabyte.pedidonotifmail.bean.Pedido;
 import com.magnabyte.pedidonotifmail.bean.Producto;
 import com.magnabyte.pedidonotifmail.connectDB.JDBCDAOFactory;
 import com.magnabyte.pedidonotifmail.sql.PedidoSql;
+import com.magnabyte.pedidonotifmail.util.PedidoException;
 
 public class PedidoDao {
 
@@ -45,11 +46,7 @@ public class PedidoDao {
 			return pedido;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -78,11 +75,7 @@ public class PedidoDao {
 			return cliente;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -121,11 +114,7 @@ public class PedidoDao {
 			return productos;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -162,11 +151,7 @@ public class PedidoDao {
 			return cortes;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -196,11 +181,7 @@ public class PedidoDao {
 			return recipients.toArray(new String[0]);
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -229,11 +210,7 @@ public class PedidoDao {
 			return causa;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -262,13 +239,9 @@ public class PedidoDao {
 			return fecha;
 
 		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			throw sqle;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+			throw new PedidoException(sqle);
 		} finally {
-			if (rs != null) {
+			if (rs != null) { 
 				rs.close();
 			}
 			if (con != null && !con.isClosed())
