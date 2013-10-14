@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.magnabyte.pedidonotifmail.bean.Pedido;
-import com.magnabyte.pedidonotifmail.bean.Producto;
-import com.magnabyte.pedidonotifmail.bean.TipoAccion;
 import com.magnabyte.pedidonotifmail.dao.PedidoDao;
+import com.magnabyte.pedidonotifmail.model.Pedido;
+import com.magnabyte.pedidonotifmail.model.Producto;
+import com.magnabyte.pedidonotifmail.model.TipoAccion;
 import com.magnabyte.pedidonotifmail.service.mail.MailService;
 import com.magnabyte.pedidonotifmail.service.pedido.PedidoService;
 

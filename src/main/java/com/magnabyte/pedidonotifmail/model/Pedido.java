@@ -1,4 +1,4 @@
-package com.magnabyte.pedidonotifmail.bean;
+package com.magnabyte.pedidonotifmail.model;
 
 import java.util.Date;
 import java.util.List;

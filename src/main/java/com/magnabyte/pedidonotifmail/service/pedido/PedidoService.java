@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.mail.MessagingException;
 
-import com.magnabyte.pedidonotifmail.bean.Pedido;
-import com.magnabyte.pedidonotifmail.bean.TipoAccion;
+import com.magnabyte.pedidonotifmail.model.Pedido;
+import com.magnabyte.pedidonotifmail.model.TipoAccion;
 
 import freemarker.template.TemplateException;
 

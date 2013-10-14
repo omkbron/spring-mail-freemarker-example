@@ -1,4 +1,4 @@
-package com.magnabyte.pedidonotifmail.bean;
+package com.magnabyte.pedidonotifmail.model;
 
 public class Corte {
 	private int item;

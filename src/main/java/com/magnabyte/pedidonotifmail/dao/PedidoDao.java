@@ -2,10 +2,10 @@ package com.magnabyte.pedidonotifmail.dao;
 
 import java.util.List;
 
-import com.magnabyte.pedidonotifmail.bean.Cliente;
-import com.magnabyte.pedidonotifmail.bean.Corte;
-import com.magnabyte.pedidonotifmail.bean.Pedido;
-import com.magnabyte.pedidonotifmail.bean.Producto;
+import com.magnabyte.pedidonotifmail.model.Cliente;
+import com.magnabyte.pedidonotifmail.model.Corte;
+import com.magnabyte.pedidonotifmail.model.Pedido;
+import com.magnabyte.pedidonotifmail.model.Producto;
 
 public interface PedidoDao {
 	Pedido recuperarPedido(Pedido pedido);

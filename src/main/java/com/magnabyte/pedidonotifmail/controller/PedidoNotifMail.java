@@ -7,8 +7,8 @@ import javax.mail.MessagingException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.magnabyte.pedidonotifmail.bean.Pedido;
-import com.magnabyte.pedidonotifmail.bean.TipoAccion;
+import com.magnabyte.pedidonotifmail.model.Pedido;
+import com.magnabyte.pedidonotifmail.model.TipoAccion;
 import com.magnabyte.pedidonotifmail.service.pedido.PedidoService;
 
 import freemarker.template.TemplateException;
