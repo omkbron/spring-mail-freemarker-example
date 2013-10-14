@@ -93,6 +93,6 @@
         </div>
       </td>
   	</tr>
-  </tr>
+  </table>
 </body>
 </html>
