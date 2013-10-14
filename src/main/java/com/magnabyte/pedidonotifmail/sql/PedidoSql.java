@@ -8,16 +8,15 @@ public class PedidoSql {
 	public static final String GET_PEDIDCORTE;
 	public static final String GET_RECIPIENTS;
 	public static final String GET_CAUSA;
-	public static final String GET_HORABAJA;
+	public static final String GET_BAJADATA;
+	public static final String GET_ALTADATA;
 	
 	static {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT pedido.fecha_pedido, pedido.fecha_entrega, pedido.almacen, TRIM(pedido.ped_clie) AS ped_clie,").append(EOL)
-			.append("pedido.status_pedido, pedido.clie_clave, pedido.vendo_clave,").append(EOL)
-			.append("traza_pedido.fecha_hora, traza_pedido.usuario").append(EOL)
-			.append("FROM pedido, traza_pedido").append(EOL)
-			.append("WHERE pedido.pedido_num = traza_pedido.pedido_num").append(EOL)
-			.append("AND pedido.pedido_num = ?").append(EOL);
+			.append("pedido.status_pedido, pedido.clie_clave, pedido.vendo_clave").append(EOL)
+			.append("FROM pedido").append(EOL)
+			.append("WHERE pedido.pedido_num = ?").append(EOL);
 		GET_PEDIDO = sb.toString();
 		
 		clearAndReuseStringBuilder(sb);
@@ -81,11 +80,21 @@ public class PedidoSql {
 		
 		sb = new StringBuilder();
 
-		sb.append("SELECT fecha_hora FROM traza_pedido").append(EOL)
+		sb.append("SELECT fecha_hora, usuario FROM traza_pedido").append(EOL)
 			.append("WHERE pedido_num = ?").append(EOL)
 			.append("AND status_pedido = 'C'").append(EOL);
 
-		GET_HORABAJA = sb.toString();
+		GET_BAJADATA = sb.toString();
+		
+		clearAndReuseStringBuilder(sb);
+		
+		sb = new StringBuilder();
+
+		sb.append("SELECT fecha_hora, usuario FROM traza_pedido").append(EOL)
+			.append("WHERE pedido_num = ?").append(EOL)
+			.append("AND status_pedido = 'A'").append(EOL);
+
+		GET_ALTADATA = sb.toString();
 	}
 	private static StringBuilder clearAndReuseStringBuilder(final StringBuilder qry) {
 		qry.delete(0, qry.length());
@@ -93,6 +102,6 @@ public class PedidoSql {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(GET_PEDIDOPROD);
+		System.out.println(GET_BAJADATA);
 	}
 }

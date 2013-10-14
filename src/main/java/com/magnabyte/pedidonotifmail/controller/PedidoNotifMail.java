@@ -2,34 +2,30 @@ package com.magnabyte.pedidonotifmail.controller;
 
 import java.io.IOException;
 
+import javax.mail.MessagingException;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.magnabyte.pedidonotifmail.bean.Pedido;
 import com.magnabyte.pedidonotifmail.bean.TipoAccion;
-import com.magnabyte.pedidonotifmail.service.GenericSendService;
-import com.magnabyte.pedidonotifmail.service.pedido.PedidoSendService;
-import com.magnabyte.pedidonotifmail.service.pedido.PedidoSendServiceImpl;
+import com.magnabyte.pedidonotifmail.service.pedido.PedidoService;
+
+import freemarker.template.TemplateException;
 
 public class PedidoNotifMail {
-	private GenericSendService genericSendService;
 
-	public PedidoNotifMail(TipoAccion accion, int numPedido, String nameFileProperties) throws IOException {
-		genericSendService = new PedidoSendServiceImpl(accion, numPedido, nameFileProperties);
-		((PedidoSendService) genericSendService).sendMail();
-	}
-
-	public static void main(String[] args) throws IOException {
-		String nameFileProperties;
-		int numPedido;
-
-		System.setProperty("file.encoding", "ISO8859_1");
-		System.setProperty("java.awt.headless", "true");
-
+	public static void main(String[] args) throws IOException, MessagingException, TemplateException {
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath*:/applicationContext.xml");
+		PedidoService pedidoService = context.getBean(PedidoService.class);
+		Pedido pedido = null;
 		switch (args.length) {
-		case 3:
-			numPedido = Integer.parseInt(args[0]);
+		case 2:
+			pedido = new Pedido(Integer.parseInt(args[0]));
 			TipoAccion accion = args[1].equalsIgnoreCase("A") ? TipoAccion.ALTA
 					: args[1].equalsIgnoreCase("B") ? TipoAccion.BAJA : null;
-			nameFileProperties = args[2];
-
-			new PedidoNotifMail(accion, numPedido, nameFileProperties);
+			
+			pedidoService.prepareAndSendMail(accion, pedido);
 			break;
 		default:
 			System.out.println("Uso incorrecto");
