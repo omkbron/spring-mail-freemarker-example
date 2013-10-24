@@ -102,6 +102,6 @@ public class PedidoSql {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(GET_BAJADATA);
+		System.out.println(GET_RECIPIENTS);
 	}
 }
