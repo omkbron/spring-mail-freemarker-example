@@ -64,7 +64,8 @@ public class PedidoSql {
         	.append("AND diusermailmov.usuario = dialmamail.usuario").append(EOL)
         	.append("AND diusermailmov.clave_mov = dialmamail.tipo_mov").append(EOL)
         	.append("AND dialmamail.alma_clave = ?").append(EOL)
-        	.append("AND diusermailmov.clave_mov = '800'").append(EOL);
+        	.append("AND diusermailmov.clave_mov = '800'").append(EOL)
+			.append("AND diuser_deta.email IS NOT NULL").append(EOL);
 		GET_RECIPIENTS = sb.toString();
 		
 		clearAndReuseStringBuilder(sb);
@@ -89,19 +90,21 @@ public class PedidoSql {
 		clearAndReuseStringBuilder(sb);
 		
 		sb = new StringBuilder();
-
-		sb.append("SELECT fecha_hora, usuario FROM traza_pedido").append(EOL)
+		
+		sb.append("SELECT FIRST 1 fecha_hora, usuario FROM traza_pedido").append(EOL)
 			.append("WHERE pedido_num = ?").append(EOL)
-			.append("AND status_pedido = 'A'").append(EOL);
+			.append("AND status_pedido = 'A'").append(EOL)
+			.append("ORDER BY fecha_hora DESC").append(EOL);
 
 		GET_ALTADATA = sb.toString();
 	}
+	
 	private static StringBuilder clearAndReuseStringBuilder(final StringBuilder qry) {
 		qry.delete(0, qry.length());
 		return qry;
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(GET_RECIPIENTS);
+		System.out.println(GET_ALTADATA);
 	}
 }
