@@ -73,7 +73,8 @@ public class PedidoServiceImpl implements PedidoService {
 		
 		String[] recipients = pedidoDao.obtenerDestinatarios(pedido).toArray(new String[0]);
 		if (recipients.length > 0) {
-			mailService.sendMailWithEngine("No se puede mostrar el contenido", subject, template, getHtmlBodyProps(pedido), recipients);
+			mailService.sendMailWithEngine("No se puede mostrar el contenido", subject, template, 
+					getHtmlBodyProps(pedido), recipients);
 		} else {
 			System.out.println("El correo no se envia ya que no hay destinatarios configurados.");
 		}
