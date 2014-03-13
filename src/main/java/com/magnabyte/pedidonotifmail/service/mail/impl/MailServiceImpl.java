@@ -36,20 +36,17 @@ public class MailServiceImpl implements MailService {
 
 	@Override
 	public void sendMail(String message, String subject, String... recipients) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void sendMimeMail(String message, String messageHtml,
 			String subject, String... recipients) throws MessagingException {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void sendMailWithAttach(String message, String messageHtml,
 			String subject, FileSystemResource[] attach, String... recipients)
 			throws MessagingException {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override
