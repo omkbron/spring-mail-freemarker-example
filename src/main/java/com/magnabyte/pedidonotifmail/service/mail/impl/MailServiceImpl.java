@@ -62,5 +62,6 @@ public class MailServiceImpl implements MailService {
 		String text = FreeMarkerTemplateUtils.processTemplateIntoString(templateFreemarker, model);
 		helper.setText(message, text);
 		javaMailSender.send(msg);
+		System.out.println("Correo enviado!");
 	}
 }

@@ -105,6 +105,6 @@ public class PedidoSql {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(GET_RECIPIENTS);
+		System.out.println(GET_CAUSA);
 	}
 }

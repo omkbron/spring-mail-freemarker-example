@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -108,9 +109,11 @@ public class PedidoDaoImpl extends GenericJdbcDao implements PedidoDao {
 	}
 
 	public String recuperarCausa(Pedido pedido) {
-		
-		return getJdbcTemplate().queryForObject(PedidoSql.GET_CAUSA, String.class, pedido.getNumero());
-		
+		try {
+			return getJdbcTemplate().queryForObject(PedidoSql.GET_CAUSA, String.class, pedido.getNumero());
+		} catch (EmptyResultDataAccessException ex) {
+			return null;
+		}
 	}
 
 	@Override

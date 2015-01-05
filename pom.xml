@@ -8,7 +8,7 @@
 	<name>pedido-notif-mail</name>
 	<url>http://maven.apache.org</url>
 	<properties>
-		<spring.version>3.2.4.RELEASE</spring.version>
+		<spring.version>4.0.1.RELEASE</spring.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,19 +52,22 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>pedido-notif-mail</finalName>
-		<filters>
-			<filter>src/main/filters/emailsina_${company}.properties</filter>
-		</filters>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
+					<exclude>config/</exclude>
 					<exclude>*.ftl</exclude>
+					<exclude>*.properties</exclude>
 				</excludes>
-				<filtering>true</filtering>
 			</resource>
 		</resources>
 		<plugins>
@@ -95,41 +98,23 @@
 					</archive>
 				</configuration>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
-<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
-<!-- 				<version>2.5.1</version> -->
-<!-- 				<executions> -->
-<!-- 					<execution> -->
-<!-- 						<id>copy-dependencies</id> -->
-<!-- 						<phase>package</phase> -->
-<!-- 						<goals> -->
-<!-- 							<goal>copy-dependencies</goal> -->
-<!-- 						</goals> -->
-<!-- 						<configuration> -->
-<!-- 							<includeGroupIds>informix,javax.mail,com.omkbron,org.freemarker,org.springframework,commons-dbcp,commons-pool,commons-logging</includeGroupIds> -->
-<!-- 							<outputDirectory>${project.build.directory}/lib/</outputDirectory> -->
-<!-- 						</configuration> -->
-<!-- 					</execution> -->
-<!-- 				</executions> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.5.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib/</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>4</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<company>4</company>
-			</properties>
-		</profile>
-		<profile>
-			<id>gb</id>
-			<properties>
-				<company>gb</company>
-			</properties>
-		</profile>
-	</profiles>
 </project>

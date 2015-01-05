@@ -59,7 +59,7 @@ public class PedidoServiceImpl implements PedidoService {
 			template = templateBaja;
 			pedido.setCausa(pedidoDao.recuperarCausa(pedido));
 			if (pedido.getCausa() == null || pedido.getCausa().equals("")) {
-				pedido.setCausa("NO DEFINIDO");
+				pedido.setCausa("CAUSA NO DEFINIDA POR EL USUARIO AL REALIZAR LA CANCELACION");
 			}
 			pedidoDao.recuperarUsuarioHoraBaja(pedido);
 		default:
